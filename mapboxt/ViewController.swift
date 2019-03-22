@@ -157,22 +157,17 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         NotificationCenter.default.addObserver(self, selector: #selector(offlinePackProgressDidChange), name: NSNotification.Name.MGLOfflinePackProgressChanged, object: nil)
     }
     
-    let tie_tu = UIButton(frame: CGRect(x: 250, y: 100, width: 100, height: 50))
+    let screen_width = UIScreen.main.bounds.width
+    let screen_height = UIScreen.main.bounds.height
+    let tie_tu = UIButton(frame: CGRect(x: UIScreen.main.bounds.width-120, y: 100, width: 100, height: 50))
     
     func add_button() {
-//        let button = UIButton(frame: CGRect(x: 60, y: 100, width: 150, height: 50))
-//        button.setTitle("下载已打包数据包", for: .normal)
-//        button.titleLabel?.tintColor = UIColor.black
-//        button.backgroundColor = UIColor.lightGray
-//        button.addTarget(self, action: #selector(downloadPark), for: .touchUpInside)
-//        view.addSubview(button)
-        
-        let data_btn = UIButton(frame: CGRect(x: 60, y: 200, width: 150, height: 50))
-        data_btn.setTitle("下载巴黎地图", for: .normal)
-        data_btn.titleLabel?.tintColor = UIColor.black
-        data_btn.backgroundColor = UIColor.lightGray
-        data_btn.addTarget(self, action: #selector(startOfflinePackDownload), for: .touchUpInside)
-        view.addSubview(data_btn)
+        let direction_btn = UIButton(frame: CGRect(x: 30, y: 100, width: 100, height: 50))
+        direction_btn.setTitle("去故宫", for: .normal)
+        direction_btn.titleLabel?.tintColor = UIColor.black
+        direction_btn.backgroundColor = UIColor.lightGray
+        direction_btn.addTarget(self, action: #selector(direction_btnAction), for: .touchUpInside)
+        view.addSubview(direction_btn)
         
         tie_tu.setTitle("添加贴图", for: .normal)
         tie_tu.titleLabel?.tintColor = UIColor.black
@@ -180,70 +175,171 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         tie_tu.addTarget(self, action: #selector(tie_tuAction), for: .touchUpInside)
         view.addSubview(tie_tu)
         
-        let location_btn = UIButton(frame: CGRect(x: 250, y: 200, width: 120, height: 50))
-        location_btn.setTitle("用户定位", for: .normal)
+        let paris_btn = UIButton(frame: CGRect(x: 30, y: 200, width: 100, height: 50))
+        paris_btn.setTitle("下载巴黎", for: .normal)
+        paris_btn.titleLabel?.tintColor = UIColor.black
+        paris_btn.backgroundColor = UIColor.lightGray
+        paris_btn.addTarget(self, action: #selector(startParisDownload), for: .touchUpInside)
+        view.addSubview(paris_btn)
+        
+        let hz_btn = UIButton(frame: CGRect(x: screen_width-120, y: 200, width: 100, height: 50))
+        hz_btn.setTitle("下载杭州", for: .normal)
+        hz_btn.titleLabel?.tintColor = UIColor.black
+        hz_btn.backgroundColor = UIColor.lightGray
+        hz_btn.addTarget(self, action: #selector(startHangZhouDownload), for: .touchUpInside)
+        view.addSubview(hz_btn)
+        
+        let del_paris_btn = UIButton(frame: CGRect(x: 30, y: 300, width: 100, height: 50))
+        del_paris_btn.setTitle("删除巴黎", for: .normal)
+        del_paris_btn.titleLabel?.tintColor = UIColor.black
+        del_paris_btn.backgroundColor = UIColor.lightGray
+        del_paris_btn.addTarget(self, action: #selector(delete_paris_map), for: .touchUpInside)
+        view.addSubview(del_paris_btn)
+        
+        let del_hz_btn = UIButton(frame: CGRect(x: screen_width-120, y: 300, width: 100, height: 50))
+        del_hz_btn.setTitle("删除杭州", for: .normal)
+        del_hz_btn.titleLabel?.tintColor = UIColor.black
+        del_hz_btn.backgroundColor = UIColor.lightGray
+        del_hz_btn.addTarget(self, action: #selector(delete_hz_map), for: .touchUpInside)
+        view.addSubview(del_hz_btn)
+        
+        let clear_btn = UIButton(frame: CGRect(x: 30, y: 400, width: 120, height: 50))
+        clear_btn.setTitle("清空所有数据", for: .normal)
+        clear_btn.titleLabel?.tintColor = UIColor.black
+        clear_btn.backgroundColor = UIColor.lightGray
+        clear_btn.addTarget(self, action: #selector(clear_map_data), for: .touchUpInside)
+        view.addSubview(clear_btn)
+        
+        let data_list_btn = UIButton(frame: CGRect(x: screen_width-140, y: 400, width: 120, height: 50))
+        data_list_btn.setTitle("已下载数据", for: .normal)
+        data_list_btn.titleLabel?.tintColor = UIColor.black
+        data_list_btn.backgroundColor = UIColor.lightGray
+        data_list_btn.addTarget(self, action: #selector(printDataList), for: .touchUpInside)
+        view.addSubview(data_list_btn)
+        
+        
+        let location_btn = UIButton(frame: CGRect(x: screen_width-70, y: screen_height-100, width: 50, height: 50))
+        location_btn.setTitle("定位", for: .normal)
         location_btn.titleLabel?.tintColor = UIColor.black
         location_btn.backgroundColor = UIColor.lightGray
         location_btn.addTarget(self, action: #selector(locationUser), for: .touchUpInside)
         view.addSubview(location_btn)
-        
-        let direction_btn = UIButton(frame: CGRect(x: 60, y: 100, width: 150, height: 50))
-        direction_btn.setTitle("去故宫", for: .normal)
-        direction_btn.titleLabel?.tintColor = UIColor.black
-        direction_btn.backgroundColor = UIColor.lightGray
-        direction_btn.addTarget(self, action: #selector(direction_btnAction), for: .touchUpInside)
-        view.addSubview(direction_btn)
-        
-        let clear_btn = UIButton(frame: CGRect(x: 60, y: 300, width: 120, height: 50))
-        clear_btn.setTitle("清空巴黎数据", for: .normal)
-        clear_btn.titleLabel?.tintColor = UIColor.black
-        clear_btn.backgroundColor = UIColor.lightGray
-        clear_btn.addTarget(self, action: #selector(delete_map_data), for: .touchUpInside)
-        view.addSubview(clear_btn)
     }
     
-    @objc func delete_map_data() {
+    @objc func printDataList() {
+        let db = self.getMapDatabase()
+        let regions = Table("regions")
+        let description = Expression<Data>("description")
+        var region_list = [String]()
+        for region in try! db.prepare(regions) {
+            guard let item_id = try? region.get(description),
+                  let info = String(data: item_id, encoding: String.Encoding.utf8) else { return }
+            region_list.append(info)
+        }
+        mapView.noticeOnlyText(region_list.joined(separator: "|"))
+        print(region_list.joined(separator: "|"))
+    }
+    
+    func getMapDatabase() -> Connection {
+        let home = NSHomeDirectory()
+        return try! Connection(home + "/Library/Application Support/com.Tommy.mjtt/.mapbox/cache.db")
+    }
+    
+    @objc func clear_map_data() {
         mapView.pleaseWait()
         DispatchQueue.global().async {
-            let home = NSHomeDirectory()
-            let db = try! Connection(home + "/Library/Application Support/com.Tommy.mjtt/.mapbox/cache.db")
+            let db = self.getMapDatabase()
             let regions = Table("regions")
-            
             let id = Expression<Int64>("id")
-            let region_id = Expression<Int64>("region_id")
-            let tile_id = Expression<Int64>("tile_id")
-            let resource_id = Expression<Int64>("resource_id")
-            let region_tiles = Table("region_tiles")
-            let region_resources = Table("region_resources")
-            let resources = Table("resources")
-            let tiles = Table("tiles")
             
             var region_id_list = [Int64]()
             for region in try! db.prepare(regions) {
                 let region_id = try! region.get(id)
                 region_id_list.append(region_id)
             }
-            
-            for item_id in region_id_list {
-                for alias in try! db.prepare(region_resources.filter(region_id == item_id)) {
-                    let resource_item_id = try! alias.get(resource_id)
-                    try! db.run(resources.filter(id == resource_item_id).delete())
-                    try! db.run(region_resources.filter(resource_id == resource_item_id).delete())
-                }
-                
-                for alias in try! db.prepare(region_tiles.filter(region_id == item_id)) {
-                    let tile_item_id = try! alias.get(tile_id)
-                    try! db.run(tiles.filter(id == tile_item_id).delete())
-                    try! db.run(region_tiles.filter(tile_id == tile_item_id).delete())
-                }
-            }
-            try! db.run("vacuum")
+            self.delete_regions(db: db, region_id_list: region_id_list)
             DispatchQueue.main.async {
                 self.mapView.clearAllNotice()
                 self.mapView.noticeOnlyText("清除成功")
             }
         }
+    }
+    
+    @objc func delete_paris_map() {
+        delete_city_map(city_id: 13)
+    }
+    
+    @objc func delete_hz_map() {
+        delete_city_map(city_id: 307)
+    }
+    
+    func delete_city_map(city_id: Int64) {
+        mapView.pleaseWait()
+        DispatchQueue.global().async {
+            let db = self.getMapDatabase()
+            let regions = Table("regions")
+            
+            let id = Expression<Int64>("id")
+            let description = Expression<Data>("description")
+            
+            var delete_region_id: Int64 = -1
+            for region in try! db.prepare(regions) {
+                let description = try! region.get(description)
+                guard
+                    let descriptionStr = String(data: description, encoding: String.Encoding.utf8),
+                    let item_id = descriptionStr.components(separatedBy: "-").last
+                    else { continue }
+                if item_id == String(city_id) {
+                    delete_region_id = try! region.get(id)
+                    break
+                }
+            }
+            
+            if delete_region_id == -1 {
+                DispatchQueue.main.async {
+                    self.mapView.clearAllNotice()
+                    self.mapView.noticeOnlyText("没有\(city_id)数据")
+                }
+                return
+            }
+            self.delete_regions(db: db, region_id_list: [delete_region_id])
+            DispatchQueue.main.async {
+                self.mapView.clearAllNotice()
+                self.mapView.noticeOnlyText("清除成功")
+            }
+        }
+    }
+    
+    func delete_regions(db: Connection, region_id_list: [Int64]) {
+        let id = Expression<Int64>("id")
+        let regions = Table("regions")
+        let region_id = Expression<Int64>("region_id")
+        let tile_id = Expression<Int64>("tile_id")
+        let resource_id = Expression<Int64>("resource_id")
+        let region_tiles = Table("region_tiles")
+        let region_resources = Table("region_resources")
+        let resources = Table("resources")
+        let tiles = Table("tiles")
         
+        for item_id in region_id_list {
+            for alias in try! db.prepare(region_resources.filter(region_id == item_id)) {
+                let resource_item_id = try! alias.get(resource_id)
+                do { try db.run(resources.filter(id == resource_item_id).delete()) } catch {}
+                do { try db.run(region_resources.filter(resource_id == resource_item_id).delete()) } catch {}
+            }
+            
+            for alias in try! db.prepare(region_tiles.filter(region_id == item_id)) {
+                let tile_item_id = try! alias.get(tile_id)
+                do { try db.run(tiles.filter(id == tile_item_id).delete()) } catch {}
+                do { try db.run(region_tiles.filter(tile_id == tile_item_id).delete()) } catch {}
+            }
+        }
+        
+        for item_id in region_id_list {
+            do { try db.run(regions.filter(id == item_id).delete()) } catch {}
+        }
+        
+        try! db.run("vacuum")
     }
     
     @objc func direction_btnAction() {
@@ -305,62 +401,36 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         }
     }
     
-    @objc func downloadPark() {
-        let task = TRManager.default.download(db_path)
-        let path = task!.filePath
-        print(task?.filePath ?? "")
-        task?.progress({ (task) in
-            let progress = task.progress.fractionCompleted
-            print("下载中, 进度：\(progress)")
-            
-            self.mapView.noticeOnlyText("进度：\(Int(progress*100))%")
-        }).success({ (task) in
-            
-            self.mapView.noticeOnlyText("下载完成")
-            MGLOfflineStorage.shared.addContents(ofFile: path, withCompletionHandler: { (url, packs, error) in
-                
-            })
-        }).failure({ (task) in
-            print("下载失败")
-        })
-    }
-    
-    @objc func deletePark() {
-        
-        guard let url = TRCache.default.fileURL(URLString: db_path) else { return }
-        do {
-            try FileManager.default.removeItem(at: url)
-            TRManager.default.remove(db_path)
-            self.mapView.noticeOnlyText("删除成功")
-        } catch {
-            print("删除失败")
-        }
-    }
-    
-    
-    @objc func startOfflinePackDownload() {
+    @objc func startParisDownload() {
         // Create a region that includes the current viewport and any tiles needed to view it when zoomed further in.
         // Because tile count grows exponentially with the maximum zoom level, you should be conservative with your `toZoomLevel` setting.
         let sw = CLLocationCoordinate2D(latitude: 48.8, longitude: 2.3)
         let ne = CLLocationCoordinate2D(latitude: 48.9, longitude: 2.4)
         let bounds = MGLCoordinateBounds(sw: sw, ne: ne)
-        let region = MGLTilePyramidOfflineRegion(styleURL: mapView.styleURL, bounds: bounds, fromZoomLevel: 5, toZoomLevel: 22)
-        
+        let region = MGLTilePyramidOfflineRegion(styleURL: mapView.styleURL, bounds: bounds, fromZoomLevel: 5, toZoomLevel: 20)
         // Store some data for identification purposes alongside the downloaded resources.
-        let id = try! NSKeyedArchiver.archivedData(withRootObject: "巴黎", requiringSecureCoding: false)
-        
-        // Create and register an offline pack with the shared offline storage object.
-        
-        MGLOfflineStorage.shared.addPack(for: region, withContext: id) { (pack, error) in
+        downloadMapData(region: region, context: "巴黎-13".data(using: String.Encoding.utf8)!)
+    }
+    
+    @objc func startHangZhouDownload() {
+        let sw = CLLocationCoordinate2D(latitude: 30.0799, longitude: 120.048)
+        let ne = CLLocationCoordinate2D(latitude: 30.334, longitude: 120.4167)
+        let bounds = MGLCoordinateBounds(sw: sw, ne: ne)
+        let region = MGLTilePyramidOfflineRegion(styleURL: mapView.styleURL, bounds: bounds, fromZoomLevel: 5, toZoomLevel: 20)
+        downloadMapData(region: region, context: "杭州-307".data(using: String.Encoding.utf8)!)
+    }
+    
+    func downloadMapData(region: MGLTilePyramidOfflineRegion, context: Data) {
+        MGLOfflineStorage.shared.addPack(for: region, withContext: context) { (pack, error) in
             guard error == nil else {
                 // The pack couldn’t be created for some reason.
                 print("Error: \(error?.localizedDescription ?? "unknown error")")
                 return
             }
             // Start downloading.
+            self.pro = 0
             pack!.resume()
         }
-        
     }
     
     // MARK: - MGLOfflinePack notification handlers
@@ -369,7 +439,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         // Get the offline pack this notification is regarding,
         // and the associated user info for the pack; in this case, `name = My Offline Pack`
         if let pack = notification.object as? MGLOfflinePack,
-            let userInfo = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(pack.context) as? String {
+            let userInfo = String(data: pack.context, encoding: String.Encoding.utf8) {
             let progress = pack.progress
             
             // or notification.userInfo![MGLOfflinePackProgressUserInfoKey]!.MGLOfflinePackProgressValue
@@ -384,19 +454,14 @@ class ViewController: UIViewController, MGLMapViewDelegate {
             if pro < per {
                 pro = per
                 DispatchQueue.main.async {
-                    self.mapView.noticeOnlyText("\(userInfo ?? "")进度：\(per)%")
+                    self.mapView.noticeOnlyText("\(userInfo)进度：\(per)%")
                 }
             }
             // If this pack has finished, print its size and resource count.
             if progressPercentage == 1.0 {
                 DispatchQueue.main.async {
-                    self.mapView.noticeOnlyText("\(String(describing: userInfo))下载完成")
+                    self.mapView.noticeOnlyText("\(userInfo)下载完成")
                 }
-            }
-            if completedResources == expectedResources {
-                
-            } else {
-                
             }
         }
     }
