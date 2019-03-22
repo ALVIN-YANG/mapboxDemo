@@ -12,6 +12,7 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxNavigation
 import Tiercel
+import SQLite
 
 let imageSource: MGLImageSource = {
     let coordinates = MGLCoordinateQuad(
@@ -179,7 +180,7 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         tie_tu.addTarget(self, action: #selector(tie_tuAction), for: .touchUpInside)
         view.addSubview(tie_tu)
         
-        let location_btn = UIButton(frame: CGRect(x: 250, y: 200, width: 150, height: 50))
+        let location_btn = UIButton(frame: CGRect(x: 250, y: 200, width: 120, height: 50))
         location_btn.setTitle("用户定位", for: .normal)
         location_btn.titleLabel?.tintColor = UIColor.black
         location_btn.backgroundColor = UIColor.lightGray
@@ -192,6 +193,57 @@ class ViewController: UIViewController, MGLMapViewDelegate {
         direction_btn.backgroundColor = UIColor.lightGray
         direction_btn.addTarget(self, action: #selector(direction_btnAction), for: .touchUpInside)
         view.addSubview(direction_btn)
+        
+        let clear_btn = UIButton(frame: CGRect(x: 60, y: 300, width: 120, height: 50))
+        clear_btn.setTitle("清空巴黎数据", for: .normal)
+        clear_btn.titleLabel?.tintColor = UIColor.black
+        clear_btn.backgroundColor = UIColor.lightGray
+        clear_btn.addTarget(self, action: #selector(delete_map_data), for: .touchUpInside)
+        view.addSubview(clear_btn)
+    }
+    
+    @objc func delete_map_data() {
+        mapView.pleaseWait()
+        DispatchQueue.global().async {
+            let home = NSHomeDirectory()
+            let db = try! Connection(home + "/Library/Application Support/com.Tommy.mjtt/.mapbox/cache.db")
+            let regions = Table("regions")
+            
+            let id = Expression<Int64>("id")
+            let region_id = Expression<Int64>("region_id")
+            let tile_id = Expression<Int64>("tile_id")
+            let resource_id = Expression<Int64>("resource_id")
+            let region_tiles = Table("region_tiles")
+            let region_resources = Table("region_resources")
+            let resources = Table("resources")
+            let tiles = Table("tiles")
+            
+            var region_id_list = [Int64]()
+            for region in try! db.prepare(regions) {
+                let region_id = try! region.get(id)
+                region_id_list.append(region_id)
+            }
+            
+            for item_id in region_id_list {
+                for alias in try! db.prepare(region_resources.filter(region_id == item_id)) {
+                    let resource_item_id = try! alias.get(resource_id)
+                    try! db.run(resources.filter(id == resource_item_id).delete())
+                    try! db.run(region_resources.filter(resource_id == resource_item_id).delete())
+                }
+                
+                for alias in try! db.prepare(region_tiles.filter(region_id == item_id)) {
+                    let tile_item_id = try! alias.get(tile_id)
+                    try! db.run(tiles.filter(id == tile_item_id).delete())
+                    try! db.run(region_tiles.filter(tile_id == tile_item_id).delete())
+                }
+            }
+            try! db.run("vacuum")
+            DispatchQueue.main.async {
+                self.mapView.clearAllNotice()
+                self.mapView.noticeOnlyText("清除成功")
+            }
+        }
+        
     }
     
     @objc func direction_btnAction() {

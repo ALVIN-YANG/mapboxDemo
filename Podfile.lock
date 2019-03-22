@@ -17,12 +17,16 @@ PODS:
   - MapboxSpeech (0.1.0)
   - Polyline (4.2.0)
   - Solar (2.1.0)
+  - SQLite.swift (0.11.5):
+    - SQLite.swift/standard (= 0.11.5)
+  - SQLite.swift/standard (0.11.5)
   - Tiercel (2.0.2)
   - Turf (0.3.0)
 
 DEPENDENCIES:
   - Mapbox-iOS-SDK
   - MapboxNavigation
+  - SQLite.swift
   - Tiercel
 
 SPEC REPOS:
@@ -36,6 +40,7 @@ SPEC REPOS:
     - MapboxSpeech
     - Polyline
     - Solar
+    - SQLite.swift
     - Tiercel
     - Turf
 
@@ -49,9 +54,10 @@ SPEC CHECKSUMS:
   MapboxSpeech: d7569ee91dd8bdca3ef8d19b6828e8754c1073ec
   Polyline: 3d69f75bb136357e27291d439d0436c6ebda57a4
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
+  SQLite.swift: 6e5356850bb1791459f8c16d6ee9195b28714a2e
   Tiercel: 4b8fca23d5857ee93d660371664201ed6215258f
   Turf: c6bdf62d6a70c647874f295dd1cf4eefc0c3e9e6
 
-PODFILE CHECKSUM: c9b5e61356eb5739eb23da827e0dbc38b7fb70ba
+PODFILE CHECKSUM: bb095624cffc013983654753af2ef06902a17167
 
 COCOAPODS: 1.5.3

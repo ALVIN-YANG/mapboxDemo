@@ -11,4 +11,5 @@ target 'mapboxt' do
   pod 'MapboxNavigation'
 #  pod 'MapboxChinaPlugin'
   pod 'Tiercel'
+  pod 'SQLite.swift'
 end
